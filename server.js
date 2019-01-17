@@ -17,8 +17,10 @@
 
 // Configured by environment parameters
 var header_image      = process.env.HEADER_IMAGE || "simlogo.png";
-var port              = process.env.PORT || 8880;
-var prune_interval    = process.env.PRUNE_INTERVAL || 86400; //604800;
+var port              = process.env.PORT || 80;
+
+// 1800 = 30 min ; 3600 = 1 hour ; 86400 = 1 day
+var prune_interval    = process.env.PRUNE_INTERVAL || 604800;
 
 // Includes
 var express    = require('express');
@@ -32,6 +34,13 @@ var translator = require('./lib/Translator.js');
 var ListingProvider = require('./lib/MemoryListingProvider.js').ListingProvider;
 
 var app = express();
+
+// print to console
+// 0 = print status/error message 
+// 1 = print minor data
+// 2 = print error message
+// 3 = full data
+global.console_log = 1;
 
 app.use(express.bodyParser());
 app.set('trust proxy', true);
@@ -92,8 +101,10 @@ app.post('/announce', function(req, res) {
         function () {
             var new_listing = new listing.Listing(req.body.dns, req.body.port, req.body.sid);
             
-            console.log(JSON.stringify(req.body));
-            console.log("");
+            if (global.console_log === 3) {
+                console.log("announce item: " + JSON.stringify(req.body));
+                console.log("");
+            }
             
             if (new_listing.name === "") { new_listing.name = new_listing.id; }
 
@@ -108,8 +119,10 @@ app.post('/announce', function(req, res) {
                 req.body.ver = req.body.ver.replace(" . ", ".");
             }
 
-            console.log(new_listing.sid);
-            console.log("");
+            if (global.console_log === 1 || global.console_log === 3) {
+                console.log("announce sid: " + new_listing.sid);
+                console.log("");
+            }
 
             listingProvider.findBySid(new_listing.sid, function (existing_listing) {
                 new_listing.update_from_object(existing_listing);
@@ -173,8 +186,14 @@ app.get('/list', function(req, res) {
                 if (listings.hasOwnProperty(key)) {
                     var item = listings[key];
                     var timings = simutil.get_times(item.date, item.aiv);
+                    
+                    if (global.console_log === 3) {
+                        console.log("listings item: " + JSON.stringify(item));
+                        console.log("");
+                    }
+
                     if (timings.overdue_by > prune_interval * 1000) {
-                        listingProvider.removeById(item.sid, function(removed) {
+                        listingProvider.removeBySid(item.sid, function(removed) {
                             console.log("Pruned stale server with id: " + removed.sid);
                         });
                     } else {
@@ -217,7 +236,7 @@ app.get('/list', function(req, res) {
                     var item = listings[key];
                     var timings = simutil.get_times(item.date, item.aiv);
                     if (timings.overdue_by > prune_interval * 1000) {
-                        listingProvider.removeById(item.sid, function(removed) {
+                        listingProvider.removeBySid(item.sid, function(removed) {
                             console.log("Pruned stale server with id: " + removed.sid);
                         });
                     } else {
