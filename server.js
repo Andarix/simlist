@@ -17,10 +17,10 @@
 
 // Configured by environment parameters
 var header_image      = process.env.HEADER_IMAGE || "simlogo.png";
-var port              = process.env.PORT || 80;
+var port              = process.env.PORT || 8088;
 
 // 1800 = 30 min ; 3600 = 1 hour ; 86400 = 1 day
-var prune_interval    = process.env.PRUNE_INTERVAL || 604800;
+var prune_interval    = process.env.PRUNE_INTERVAL || 1800; //604800;
 
 // Includes
 var express    = require('express');
