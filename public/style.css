@@ -55,18 +55,32 @@ padding: 0.3em;
 }
 
 
-
 .lang_select {
     background-color: #2599E5;
     color: #FFF;
     padding: 0.3em;
     border-top: 1px solid #000;
     font-size: 8pt;
-    text-align: right;
+    text-align: center;
+}
+.lang_select ul {
+    //background-color: #DEF0FB;
+    display: block;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+.lang_select li {
+    /*background-color: #DEF0FB;*/
+    display: inline;
+    padding: 3px 10px 3px 0px;
+    margin: 0;
+    border: 0;
+    font-size: 10.5pt;
 }
 .lang_select a {
     color: #FFF;
-    text-decoration: underline;
+    text-decoration: none;
 }
 .lang_select a:hover {
     background-color: #FFF;

@@ -1,0 +1,31 @@
+{
+  "langlist": [
+    {
+      "id": "de",
+      "namen": [
+        {
+          "en_lang": "German",
+          "lang_lang": "Deutsch"
+        }
+      ]
+    },
+    {
+      "id": "en",
+      "namen": [
+        {
+          "en_lang": "English",
+          "lang_lang": "English"
+        }
+      ]
+    },
+    {
+      "id": "ja",
+      "namen": [
+        {
+          "en_lang": "Japanese",
+          "lang_lang": "日本語"
+        }
+      ]
+    }
+  ]
+}

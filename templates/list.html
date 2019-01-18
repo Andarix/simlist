@@ -23,14 +23,14 @@
 {{/data}}
 {{^detail}}
 {{#data}}
-                <p><a href="./list?detail={{sid}}#{{sid}}">{{#translate}}show_server_detail{{/translate}}</a></p>
+                <p><a href="./list?lang={{u_lang}}&detail={{sid}}#{{sid}}">{{#translate}}show_server_detail{{/translate}}</a></p>
             </div>
         </div>
 {{/data}}
 {{/detail}}
 {{#detail}}
 {{#data}}
-                <p><a href="./list#{{sid}}">{{#translate}}hide_server_detail{{/translate}}</a></p>
+                <p><a href="./list?lang={{u_lang}}#{{sid}}">{{#translate}}hide_server_detail{{/translate}}</a></p>
                 <p>{{#translate}}list_map_1{{/translate}}{{towns}}{{#translate}}list_map_2{{/translate}}{{citizens}}{{#translate}}list_map_3{{/translate}}{{factories}}{{#translate}}list_map_4{{/translate}}{{convoys}}{{#translate}}list_map_5{{/translate}}{{stops}}{{#translate}}list_map_6{{/translate}}</p>
                 <p>{{#translate}}list_pakset{{/translate}}{{pak}}</p>
                 <p>{{#translate}}list_ver{{/translate}}{{ver}}</p>

@@ -1,5 +1,11 @@
     <div class="lang_select">
-        &nbsp;
+        <ul>
+            {{#langlist}}
+            {{#items}}
+                <li><a href="./list?lang={{lang_id}}" title="{{lang_name}} | {{en_name}}">{{lang_name}}</a></li>
+            {{/items}}
+            {{/langlist}}
+        </ul>
     </div>
 </body>
 </html>

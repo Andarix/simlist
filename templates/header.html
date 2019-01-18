@@ -17,12 +17,18 @@
         <h1>{{title}} - {{#translate}}server_listing{{/translate}}</h1>
         <div class="main_nav">
             <ul>
-                <li><a href="./list">{{#translate}}server_listing{{/translate}}</a></li>
+                <li><a href="./list?lang={{u_lang}}">{{#translate}}server_listing{{/translate}}</a></li>
                 <li><a href="http://forum.simutrans.com/index.php?board=78.0">{{#translate}}forum_link{{/translate}}</a></li>
                 <li><a href="./announce">{{#translate}}announce_test{{/translate}}</a></li>
             </ul>
         </div>
     </div>
     <div class="lang_select">
-        &nbsp;
+        <ul>
+            {{#langlist}}
+            {{#items}}
+                <li><a href="./list?lang={{lang_id}}" title="{{lang_name}} | {{en_name}}">{{lang_name}}</a></li>
+            {{/items}}
+            {{/langlist}}
+        </ul>
     </div>

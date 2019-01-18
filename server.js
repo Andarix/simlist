@@ -40,7 +40,7 @@ var app = express();
 // 1 = print minor data
 // 2 = print error message
 // 3 = full data
-global.console_log = 1;
+global.console_log = 3;
 
 app.use(express.bodyParser());
 app.set('trust proxy', true);
@@ -158,25 +158,60 @@ app.get('/list', function(req, res) {
         } else {
             var b_lang = browser_langs.split(","); // browser languages
         }
-        
+
+        // read language name file
+        const fs = require('fs');
+        let data = fs.readFileSync('./locales/languages.json');
+        var langnames = JSON.parse(data, 
+            (key, value) => {
+                return value;
+            }
+        );
+
         langs.forEach( function  (value) { // check select language in exists languages
             if (value === b_lang[0]) {
                 global.lang = value;
                 return;
             }
-            //console.log(value);
         });
         //global.lang = "ja"; // for test translate
+        
+        // language list header and footer
+        var langnames_groups = {};
+        var langlist_mapped = [];
+        let key;
+        for (key in langnames.langlist) {
+            if (global.console_log === 3) { 
+                console.log("lang id: " + langnames.langlist[key].id);
+                console.log ("lang en: " + langnames.langlist[key].namen[0].en_lang);
+                console.log ("lang language: " + langnames.langlist[key].namen[0].lang_lang);
+                console.log ("");
+            }
+            
+            langnames_groups[langnames.langlist[key].id] = [];
+
+            langnames_groups[langnames.langlist[key].id].push({
+                lang_id: langnames.langlist[key].id,
+                en_name: langnames.langlist[key].namen[0].en_lang,
+                lang_name: langnames.langlist[key].namen[0].lang_lang
+            });
+            
+        }
+        // Map langnames into output format for mustache
+        for (key in langnames_groups) {
+            langlist_mapped.push({name: key, items: langnames_groups[key]});
+        }
         
         res.writeHead(200, {"Content-Type": "text/html"});
 
         // Write header
         res.write(mustache.to_html(templates["header.html"],
-            {title: req.host, translate: translate, headerimage: header_image}));
+            {title: req.host, translate: translate, headerimage: header_image, 
+                langlist: langlist_mapped, u_lang: global.lang}));
 
-        urlbase = "./list";
+        urlbase = "./list?lang=" + global.lang;
         if (req.query.detail) {
-            urlbase = urlbase + "?detail=" + req.query.detail;
+            urlbase = urlbase + "?lang=" + global.lang + "&detail=" + req.query.detail;
         }
 
         listingProvider.findAll(function (listings) {
@@ -185,6 +220,7 @@ app.get('/list', function(req, res) {
             for (key in listings) {
                 if (listings.hasOwnProperty(key)) {
                     var item = listings[key];
+                    item.u_lang = global.lang;
                     var timings = simutil.get_times(item.date, item.aiv);
                     
                     if (global.console_log === 3) {
@@ -224,7 +260,7 @@ app.get('/list', function(req, res) {
                 {translate: translate, timeformat: simutil.format_time,
                  paksets: paksets_mapped}));
 
-            res.write(mustache.to_html(templates["footer.html"], {}));
+            res.write(mustache.to_html(templates["footer.html"], {langlist: langlist_mapped}));
             res.end();
         });
     } else if (req.query.format === "csv") {
@@ -248,7 +284,7 @@ app.get('/list', function(req, res) {
 //                            && item.name 
 //                            && item.rev
 //                            && item.pak && item.pak !== "unknown") {
-) {
+                            ) {
                             var itname = "simutrans server";
                             if (item.name) {
                                 itname = item.name;
