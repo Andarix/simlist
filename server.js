@@ -236,7 +236,12 @@ app.get('/list', function(req, res) {
                         if (timings.overdue_by > item.aiv * 1000) {
                             item.st = 0;
                         }
-                        var pakset_name = item.pak.split(" ")[0];
+                        
+                        var pakname_lower = item.pak.toLowerCase();
+                        var start_pakname = pakname_lower.indexOf('pak');
+                        var end_pakname = pakname_lower.indexOf(' ', start_pakname);
+                        var pakset_name = item.pak.slice(start_pakname, end_pakname);
+                        
                         if (pakset_names.indexOf(pakset_name) < 0) {
                             pakset_names.push(pakset_name);
                             pakset_groups[pakset_name] = [];
